@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formulario de Compra</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="formulario-compra">
+    <h2>Formulario de Compra</h2>
+
+    <label for="usuario">Nombre de Usuario</label>
+    <input type="text" id="usuario" placeholder="Ej: Carlos Martínez">
+
+    <label for="producto">Producto Seleccionado</label>
+    <select id="producto">
+      <option>Selecciona un producto</option>
+      <option>Mouse Inalámbrico</option>
+      <option>Teclado Mecánico</option>
+      <option>Monitor 24''</option>
+      <option>Laptop Lenovo</option>
+    </select>
+
+    <label for="cantidad">Cantidad</label>
+    <input type="number" id="cantidad" min="1" max="10" value="1">
+
+    <label for="acciones">Acción</label>
+    <select id="acciones">
+      <option>Agregar al carrito</option>
+      <option>Eliminar del carrito</option>
+      <option>Ver carrito</option>
+      <option>Confirmar compra</option>
+      <option>Cancelar compra</option>
+    </select>
+
+    <label for="comentarios">Comentarios o instrucciones adicionales</label>
+    <textarea id="comentarios" rows="3" placeholder="Instrucciones especiales para el pedido..."></textarea>
+
+    <button onclick="imprimirYDescargarPDF()">Imprimir y Descargar</button>
+  </div>
+
+  <!-- Scripts necesarios -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    async function imprimirYDescargarPDF() {
+      const form = document.getElementById("formulario-compra");
+
+      // Captura visual del formulario
+      const canvas = await html2canvas(form);
+      const imgData = canvas.toDataURL("image/png");
+
+      // Mostrar ventana de impresión del navegador
+      window.print();
+
+      // Crear PDF con la imagen
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width, canvas.height]
+      });
+
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      pdf.save("formulario_compra.pdf");
+    }
+  </script>
+</body>
+</html>
